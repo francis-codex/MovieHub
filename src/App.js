@@ -20,12 +20,26 @@ const App = () =>{
   }
 
     useEffect(() => {
-         searchMovies('Batman')
+      const getRandomSearchTerm = () => {
+        const searchTerms = ['action', 'comedy', 'drama', 'thriller', 'adventure'];
+        const randomIndex = Math.floor(Math.random() * searchTerms.length);
+        return searchTerms[randomIndex];
+      };
+  
+      const fetchRandomMovies = async () => {
+        const randomTerm = getRandomSearchTerm();
+        const response = await fetch(`${API_URL}&s=${randomTerm}`);
+        const data = await response.json();
+        setMovies(data.Search);
+        setSearchTerm(randomTerm);
+      };
+  
+      fetchRandomMovies();
     }, []);
 
    return (
       <div className="app">
-          <h1>MovieLab</h1>
+          <h1>MovieHub</h1>
 
           <div className="search">
             <input
@@ -45,7 +59,7 @@ const App = () =>{
             ? (
                <div className="container">
                    {movies.map((movie) => (
-                      <MovieCard movie={movie} />
+                      <MovieCard key={movie.imdbID} movie={movie} />
                    ))}
                </div>
             ) : (
